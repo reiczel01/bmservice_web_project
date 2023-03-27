@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+.container {
+    width: 100%;
+    max-width: 1200px; /* Maksymalna szerokość kontenera */
+    margin: 0 auto; /* Wyśrodkowanie kontenera */
+    padding: 0 20px; /* Dodatkowy padding na bokach */
+  }
+  
+  /* Wiersz */
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px; /* Ustawienie marginesów wiersza */
+  }
+  
+  /* Kolumny */
+  .col {
+    box-sizing: border-box;
+    flex: 1;
+    padding: 0 10px; /* Ustawienie marginesów kolumn */
+  }
+  
+  /* Breakpointy */
+  @media (min-width: 576px) { /* SM */
+    .container {
+      max-width: 540px;
+    }
+  }
+  
+  @media (min-width: 768px) { /* MD */
+    .container {
+      max-width: 720px;
+    }
+  }
+  
+  @media (min-width: 992px) { /* LG */
+    .container {
+      max-width: 960px;
+    }
+  }
+  
+  @media (min-width: 1200px) { /* XL */
+    .container {
+      max-width: 1140px;
+    }
+  }
+  
+  @media (min-width: 1400px) { /* XXL */
+    .container {
+      max-width: 1320px;
+    }
+  }
+  
+  @media (max-width: 575px) { /* XS */
+    .col {
+      width: 100%; /* Ustawienie szerokości kolumn na 100% */
+      padding: 0; /* Usunięcie paddingu kolumn */
+    }
+  }
