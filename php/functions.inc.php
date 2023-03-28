@@ -104,7 +104,7 @@ function createUser($conn, $first_name, $last_name, $username, $email, $phone, $
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Sekcja funkcji sprawdzających i logujących istniejącego urzytkownika                          /////
-/// Są one wykonywane z signup.php i signup.inc.php ///////////////////////////////////////////////////
+/// Są one wykonywane z signin.php i signin.inc.php ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 function emptyInputLogin($username, $password)
 {
@@ -152,4 +152,21 @@ function loginUser($conn, $username, $password)
         header("Location: ../index.php?error=succesLogin");
         exit();
     }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Sekcja funkcji sprawdzających inputy                                                          /////
+/// Anty XSS i sqlInjection                         ///////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+function secure_input_XSS($input) {
+    $secure_input = htmlspecialchars(strip_tags(trim($input)), ENT_QUOTES, 'UTF-8');
+    return $secure_input;
+}
+function secure_sql($input) {
+    $secure_input = mysqli_real_escape_string($conn, $input);
+    return $secure_input;
+}
+function secure_input($input) {
+    $secure_input = secure_input_XSS($input);
+    $secure_input = secure_sql($input);
+    return $secure_input;
 }
