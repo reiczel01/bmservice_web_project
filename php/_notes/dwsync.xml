@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="login.php" server="192.168.1.104//home/app/" local="133243384652559697" remote="133243384640000000" Dst="2" />
+<file name="dbHandler.inc.php" server="192.168.1.104//home/app/" local="133244877018899968" remote="133244877010000000" Dst="2" />
+<file name="functions.inc.php" server="192.168.1.104//home/app/" local="133245734881875012" remote="133245780990000000" Dst="2" />
+<file name="login.inc.php" server="192.168.1.104//home/app/" local="133245614499132323" remote="133245614490000000" Dst="2" />
+<file name="notification.inc.php" server="192.168.1.104//home/app/" local="133245602931592033" remote="133245602930000000" Dst="2" />
 </dwsync>

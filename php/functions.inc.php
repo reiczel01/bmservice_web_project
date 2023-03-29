@@ -4,7 +4,7 @@
 /// Są one wykonywane z signup.php i signup.inc.php ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function emptyInputSignup($first_name, $last_name, $username, $email, $phone, $address, $password, $passwordRepeat)
+function emptyInputSignup($first_name, $last_name, $username, $email, $phone, $address, $password, $passwordRepeat): bool
 {
     if (empty($first_name) || empty($last_name) || empty($username) || empty($email) || empty($phone) || empty($address) || empty($password) || empty($passwordRepeat)) {
         $result = true;
@@ -14,7 +14,8 @@ function emptyInputSignup($first_name, $last_name, $username, $email, $phone, $a
     return $result;
 }
 
-function invalidUid($username) {
+function invalidUid($username): bool
+{
 
     if (!preg_match("/^[a-zA-Z0-9]*$/", $username)) {
         $result = true;
@@ -24,7 +25,8 @@ function invalidUid($username) {
     return $result;
 }
 
-function invalidEmail($email) {
+function invalidEmail($email): bool
+{
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $result = true;
     } else {
@@ -33,7 +35,8 @@ function invalidEmail($email) {
     return $result;
 }
 
-function passMatch($password, $passwordRepeat) {
+function passMatch($password, $passwordRepeat): bool
+{
     if ($password !== $passwordRepeat) {
         $result = true;
     } else {
@@ -43,7 +46,17 @@ function passMatch($password, $passwordRepeat) {
 }
 
 function uidExists($conn, $username, $email) {
-    $sql = "SELECT * FROM users WHERE username = ? OR email = AES_ENCRYPT(?, 'klucz_szyfrowania');";
+    $sql = "SELECT   
+  username,
+  id,
+  password, 
+  is_admin, 
+  email,
+  AES_DECRYPT(first_name, 'klucz_szyfrowania') AS first_name,
+  AES_DECRYPT(last_name, 'klucz_szyfrowania') AS last_name,
+  AES_DECRYPT(phone, 'klucz_szyfrowania') AS phone,
+  AES_DECRYPT(address, 'klucz_szyfrowania') AS address 
+  FROM users WHERE username = ? OR email = ?;";
     // inicjaliacja naszego zapytania, ma to za zadanie zabezpieczyć nas przed
     // nadpisaniem danych w naszej bazie przez urzytkownika
     // sql injection
@@ -67,19 +80,18 @@ function uidExists($conn, $username, $email) {
     if ($row = mysqli_fetch_assoc($resultData)) {
         return $row;
     } else {
-        $result = false;
-        return $result;
+        return false;
     }
 
     // zamykamy nasze zapytanie
     mysqli_stmt_close($stmt);
 }
 
-function createUser($conn, $first_name, $last_name, $username, $email, $phone, $address, $password, $is_admin)
+function createUser($conn, $first_name, $last_name, $username, $email, $phone, $address, $password, $is_admin): void
 {
 
     $sql = "INSERT INTO users (username, password, is_admin, email, first_name, last_name, phone, address) 
-            VALUES (?, AES_ENCRYPT(?, 'klucz_szyfrowania'), ?, AES_ENCRYPT(?, 'klucz_szyfrowania'), AES_ENCRYPT(?, 'klucz_szyfrowania'), AES_ENCRYPT(?, 'klucz_szyfrowania'), AES_ENCRYPT(?, 'klucz_szyfrowania'), AES_ENCRYPT(?, 'klucz_szyfrowania'));";
+            VALUES (?, ?, ?, ?, AES_ENCRYPT(?, 'klucz_szyfrowania'), AES_ENCRYPT(?, 'klucz_szyfrowania'), AES_ENCRYPT(?, 'klucz_szyfrowania'), AES_ENCRYPT(?, 'klucz_szyfrowania'));";
     // inicjaliacja naszego zapytania, ma to za zadanie zabezpieczyć nas przed
     // nadpisaniem danych w naszej bazie przez urzytkownika
     // sql injection
@@ -90,7 +102,7 @@ function createUser($conn, $first_name, $last_name, $username, $email, $phone, $
     }
 
     // hashowanie hasła
-    $hashedPassword = password_hash($password, PASSWORD_ARGON2I);
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // przypisanie danych do naszego zapytania
     // (gdzie jest nasze zapytanie, typ danych [string w tym przypadku], dane przekazane przez urzytkownika)
@@ -106,7 +118,7 @@ function createUser($conn, $first_name, $last_name, $username, $email, $phone, $
 /// Sekcja funkcji sprawdzających i logujących istniejącego urzytkownika                          /////
 /// Są one wykonywane z signin.php i signin.inc.php ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-function emptyInputLogin($username, $password)
+function emptyInputLogin($username, $password): bool
 {
     if (empty($username) || empty($password)) {
         $result = true;
@@ -116,7 +128,7 @@ function emptyInputLogin($username, $password)
     return $result;
 }
 
-function loginUser($conn, $username, $password)
+function loginUser($conn, $username, $password): void
 {
     //sprawdza czy istnieje użytkownik o podanym loginie(email albo username)
     //przy pomocy funkcji uidExists wykorzytywanej również w rejestracji
@@ -125,7 +137,7 @@ function loginUser($conn, $username, $password)
     //sprawdzamy czy urzytkownik istnieje
     //jeśli nie to przekierowujemy do strony logowania z błędem
     if ($uidExists === false) {
-        header("Location: ../login.php?error=wronglogin");
+        header("Location: ../login.php?error=wrongLogin1");
         exit();
     }
 
@@ -137,7 +149,10 @@ function loginUser($conn, $username, $password)
     $checkPassword = password_verify($password, $passwordHashed);
 
     if ($checkPassword === false) {
-        header("Location: ../login.php?error=wronglogin");
+        debug_to_console(password_hash($password, PASSWORD_DEFAULT));
+        debug_to_console($passwordHashed);
+        //header("Location: ../login.php?error=wrongLogin2");
+
         exit();
     } else if ($checkPassword === true) {
         session_start();
@@ -157,16 +172,30 @@ function loginUser($conn, $username, $password)
 /// Sekcja funkcji sprawdzających inputy                                                          /////
 /// Anty XSS i sqlInjection                         ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-function secure_input_XSS($input) {
+function secure_input_XSS($input): string
+{
     $secure_input = htmlspecialchars(strip_tags(trim($input)), ENT_QUOTES, 'UTF-8');
     return $secure_input;
 }
-function secure_sql($input) {
+function secure_sql($input): string
+{
     $secure_input = mysqli_real_escape_string($conn, $input);
     return $secure_input;
 }
-function secure_input($input) {
+function secure_input($input): string
+{
     $secure_input = secure_input_XSS($input);
     $secure_input = secure_sql($input);
     return $secure_input;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Debugowanie funkji                                                                           /////
+/// Wyświetla dane w konsoli przeglądarki                                                          /////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+function debug_to_console($data) {
+    $output = $data;
+    if (is_array($output))
+        $output = implode(',', $output);
+
+    echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }

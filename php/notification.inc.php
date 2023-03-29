@@ -26,7 +26,7 @@ function notification($message)
     else if ($message == "none") {
         echo "<p>You have signed up!</p>";
     }
-    else if ($message == "wronglogin") {
+    else if ($message == "wrongLogin") {
         echo "<p>Incorrect login information!</p>";
     }
     else if ($message == "successLogin") {
@@ -37,6 +37,12 @@ function notification($message)
     }
     else if ($message == "successLogout") {
         echo "<p>You have logged out!</p>";
+    }
+    else if ($message == "alreadyLoggedIn") {
+        echo "<p>You are already logged in!</p>";
+    }
+    else if (empty($message)){
+        exit;
     }
     else
     {

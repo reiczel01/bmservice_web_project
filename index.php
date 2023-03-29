@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!doctype html>
 <html>
 <head>
@@ -21,8 +24,7 @@ include('nav.php');
 ?>
 <div class="content" style="background: none; border-left: 10px solid #FFFFFF00; border-right: 10px solid #FFFFFF00;">
     <?php
-    include('login.php');
-    include('signup.php');
+
     ?>
 </div>
 

@@ -1,5 +1,4 @@
 <?php
-
 if(isset($_POST["login_btn"]))
 {
     $username = $_POST["username"];
@@ -15,6 +14,12 @@ if(isset($_POST["login_btn"]))
     }
 
     loginUser($conn, $username, $password);
+    require_once notification();
+}
+elseif(isset($_POST["signup_btn"]))
+{
+    header("Location: ../signup.php");
+    exit();
 }
 else
 {
