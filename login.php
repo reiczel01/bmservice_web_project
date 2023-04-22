@@ -26,6 +26,9 @@ include('nav.php');
         <div class="row">
             <div class="col" id="cont"></div>
             <div class="col">
+                <?php
+                if (!isset($_SESSION['userid'])) {
+                    echo '
                 <form class="form" action="/php/login.inc.php" id="login" method="post">
                     <p id="heading">Login</p>
                     <div class="field">
@@ -41,7 +44,20 @@ include('nav.php');
                         <button class="button2" name="signup_btn">Sign Up</button>
                     </div>
                     <button class="button3">Forgot Password</button>
-                </form>
+                </form>';
+                } else {
+                    echo '
+                <form class="form" id="login">
+                    <p id="heading">Succesfuly loged in!</p>
+                    <br>
+                    <span class="material-symbols-outlined" style="font-size: 120px; color: green;">check_circle</span>
+                    <div class="btn">
+                        <br>
+                        <br>
+                    </div>
+                </form>';
+                }
+                ?>
             </div>
             <div class="col"></div>
 </div>
@@ -57,4 +73,5 @@ include 'php/notification.inc.php';
 if (isset($_GET["error"])) {
     notification($_GET["error"]);
 }
+exit();
 

@@ -27,28 +27,11 @@ include('nav.php');
                     <p id="heading">Sign Up</p>
                     <div class="field">
                         <span class="material-symbols-outlined">badge</span>
-                        <input autocomplete="off" placeholder="Name" class="input-field" type="text" name="name">
-                    </div>
-                    <div class="field">
-                        <span class="material-symbols-outlined">badge</span>
-                        <input autocomplete="off" placeholder="Surname" class="input-field" type="text" name="surname">
-                    </div>
-                    <div class="field">
-                        <span class="material-symbols-outlined">badge</span>
                         <input autocomplete="off" placeholder="Username" class="input-field" type="text" name="username">
                     </div>
                     <div class="field">
                         <span class="material-symbols-outlined">badge</span>
                         <input autocomplete="off" placeholder="E-mail" class="input-field" type="text" name="email">
-                    </div>
-                    <div class="field">
-                        <span class="material-symbols-outlined">badge</span>
-                        <input autocomplete="off" placeholder="Phone" class="input-field" type="text" name="phone">
-                    </div>
-
-                    <div class="field">
-                        <span class="material-symbols-outlined">badge</span>
-                        <input autocomplete="off" placeholder="Address" class="input-field" type="text" name="address">
                     </div>
                     <div class="field">
                         <span class="material-symbols-outlined">password</span>

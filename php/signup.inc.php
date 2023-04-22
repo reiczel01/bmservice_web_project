@@ -1,19 +1,14 @@
 <?php
 if (isset($_POST["signup_btn"])) {
-    $first_name = $_POST["name"];
-    $last_name = $_POST["surname"];
     $username = $_POST["username"];
     $email = $_POST["email"];
-    $phone = $_POST["phone"];
-    $address = $_POST["address"];
     $password = $_POST["password"];
     $passwordRepeat = $_POST["passwordRepeat"];
-    $is_admin = 0;
 
     require_once 'dbHandler.inc.php';
     require_once 'functions.inc.php';
 
-    if (emptyInputSignup($first_name, $last_name, $username, $email, $phone, $address, $password, $passwordRepeat) !== false) {
+    if (emptyInputSignup( $username, $email, $password, $passwordRepeat) !== false) {
         header("Location: ../signup.php?error=emptyinput");
         exit();
     }
@@ -38,7 +33,7 @@ if (isset($_POST["signup_btn"])) {
         exit();
     }
 
-    createUser($conn, $first_name, $last_name, $username, $email, $phone, $address, $password, $is_admin);
+    createUser($conn, $username, $email, $password);
 
 
 } else {

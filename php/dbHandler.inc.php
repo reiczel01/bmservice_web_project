@@ -3,7 +3,7 @@
 $server = "db_web";
 $dbUsername = "root";
 $dbPassword = "my-new-password";
-$dbName = "mbservice";
+$dbName = "bmservice";
 
 $conn = mysqli_connect($server, $dbUsername, $dbPassword, $dbName);
 

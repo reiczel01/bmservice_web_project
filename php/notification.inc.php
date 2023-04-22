@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="../css/notification.css">
+
 <?php
 function notification($message)
 {
@@ -6,46 +8,46 @@ function notification($message)
     /// login: emptyinput, wronglogin, none /////////////////////////////////////////////////////////////////////
     /// logout: successLogout, logoutFailed ///////////////////////////////////////////////////////////////////////////////////
     if ($message == "emptyinput") {
-        echo "<p>Fill in all fields!</p>";
+        echo '<p class="notification error">Fill in all fields!</p>';
     }
     else if ($message == "invalidusername") {
-        echo "<p>Choose a proper username!</p>";
+        echo '<p class="notification error">Choose a proper username!</p>';
     }
     else if ($message == "invalidemail") {
-        echo "<p>Choose a proper email!</p>";
+        echo '<p class="notification error">Choose a proper email!</p>';
     }
     else if ($message == "passwordsdontmatch") {
-        echo "<p>Passwords don't match!</p>";
+        echo '<p class="notification error">"Passwords don\'t match!"</p>';
     }
     else if ($message == "stmtfailed") {
-        echo "<p>Something went wrong, try again!</p>";
+        echo '<p class="notification error">Something went wrong, try again!</p>';
     }
     else if ($message == "usernametaken") {
-        echo "<p>Username already taken!</p>";
+        echo '<p class="notification error">Username already taken!</p>';
     }
     else if ($message == "none") {
-        echo "<p>You have signed up!</p>";
+        echo '<p class="notification success">You have signed up!</p>';
     }
     else if ($message == "wrongLogin") {
-        echo "<p>Incorrect login information!</p>";
+        echo '<p class="notification error">Incorrect login information!</p>';
     }
-    else if ($message == "successLogin") {
-        echo "<p>You have logged out!</p>";
+    else if ($message == "succesLogin") {
+        echo '<p class="notification">You have logged in!</p>';
     }
     else if ($message == "logoutFailed") {
-        echo "<p>Logout failed!</p>";
+        echo '<p class="notification">Logout failed!</p>';
     }
     else if ($message == "successLogout") {
-        echo "<p>You have logged out!</p>";
+        echo '<p class="notification success">You have logged out!</p>';
     }
     else if ($message == "alreadyLoggedIn") {
-        echo "<p>You are already logged in!</p>";
+        echo '<p class="notification">You are already logged in!</p>';
     }
     else if (empty($message)){
         exit;
     }
     else
     {
-        echo "<p>Something went wrong!</p>";
+        echo '<p class="notification error">Something went wrong!</p>';
     }
 }
