@@ -1,0 +1,26 @@
+.notification{
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    margin: 5px;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid #000;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #000;
+    animation: hide-notification 3.0s forwards;
+}
+@keyframes hide-notification {
+    to {
+        opacity: 0;
+    }
+}
+.error{
+    background: #ff0000;
+}
+.success{
+    background: #00ff00;
+}
