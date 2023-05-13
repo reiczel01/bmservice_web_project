@@ -420,58 +420,36 @@ function invalidDate($date): bool
 
 function createTwoDimensionalArrayOfServiceRequests($conn, $user_id)
 {
-    // Tworzymy pustą dwuwymiarową tablicę, do której będą zapisywane wypisy z bazy danych
-    $service_requests_array = array();
+    $cars_service = array();
 
-    // Tworzymy zapytanie SQL, które wybierze wypisy z bazy danych dla danego użytkownika
-    $sql = "SELECT c.*, sr.*, srr.*
+    $sql = "SELECT c.model, c.make, c.registration_nr, sr.description AS request_description, sr.date_requested, sr.milage, srr.technican_name, srr.technican_last_name, srr.technican_phone, srr.date_realised, srr.description AS realisation_description
             FROM cars c
             LEFT JOIN service_requests sr ON c.car_id = sr.car_id
             LEFT JOIN service_realisations srr ON sr.request_id = srr.request_id
             WHERE c.user_id = ? AND sr.request_id IS NOT NULL
-            ORDER BY sr.date_requested, srr.date_realised;";
+            ORDER BY sr.date_requested, srr.date_realised";
 
-    // Inicjujemy przygotowanie do wykonania zapytania do bazy danych
     $stmt = mysqli_stmt_init($conn);
 
-    // Sprawdzamy, czy przygotowanie się powiodło
     if (!mysqli_stmt_prepare($stmt, $sql)) {
-        // W razie niepowodzenia przekierowujemy użytkownika na stronę service.php z informacją o błędzie
         header("Location: ../service.php?error=stmtfailed");
         exit();
     }
 
-    // Przypisujemy do zapytania wartość parametru, którym jest $user_id
-    mysqli_stmt_bind_param($stmt, "s", $user_id);
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
 
-    // Wykonujemy zapytanie do bazy danych
     mysqli_stmt_execute($stmt);
 
-    // Zapisujemy wynik zapytania do zmiennej $resultData
     $resultData = mysqli_stmt_get_result($stmt);
 
-    // Dopóki istnieją wiersze w wyniku zapytania, wykonujemy pętlę while
     while ($row = mysqli_fetch_assoc($resultData)) {
-        // Tworzymy nową tablicę $car, w której zapiszemy dane z bieżącego wiersza z bazy danych
-        $service_request = array(
-            'model' => $row['model'],
-            'make' => $row['make'],
-            'registration_nr' => $row['registration_nr'],
-            'sr.description' => $row['sr.description'],
-            'date_request' => $row['date_requested'],
-            'milage' => $row['milage'],
-            'technican_name' => $row['technican_name'],
-            'technican_last_name' => $row['technican_last_name'],
-            'technican_phone' => $row['technican_phone'],
-            'date_realised' => $row['date_realised'],
-            'srr.description' => $row['srr.description'],
-        );
-        // Dodajemy tablicę $car do naszej dwuwymiarowej tablicy $cars_array
-        $cars_service[] = $service_request;
+        $cars_service[] = $row;
     }
 
     return $cars_service;
 }
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Debugowanie funkji                                                                            /////
