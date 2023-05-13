@@ -427,7 +427,7 @@ function createTwoDimensionalArrayOfServiceRequests($conn, $user_id)
             LEFT JOIN service_requests sr ON c.car_id = sr.car_id
             LEFT JOIN service_realisations srr ON sr.request_id = srr.request_id
             WHERE c.user_id = ? AND sr.request_id IS NOT NULL
-            ORDER BY sr.date_requested, srr.date_realised";
+            ORDER BY sr.date_requested DESC";
 
     $stmt = mysqli_stmt_init($conn);
 
