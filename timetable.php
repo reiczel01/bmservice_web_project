@@ -33,6 +33,9 @@ include('nav.php');
                             <span class="material-symbols-outlined">directions_car</span>
                             <?php
                             include 'php/carSelector.inc.php';
+                            //TODO: add adress info selector
+
+                            //TODO: make posible to add new car service request
                             ?>
                         </div>
                         <div class="field">

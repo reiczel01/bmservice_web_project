@@ -221,7 +221,7 @@ function secure_sql($input): string
 function secure_input($input): string
 {
     $secure_input = secure_input_XSS($input);
-    $secure_input = secure_sql($input);
+    $secure_input = secure_sql($secure_input);
     return $secure_input;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -448,6 +448,14 @@ function createTwoDimensionalArrayOfServiceRequests($conn, $user_id)
 
     return $cars_service;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Sekcja tworzenia i edytowania danych do adminPanel.php                                        /////
+/// Są one wykonywane z adminPanel.php i adminPanel.inc.php //////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//TODO: Create function to list all service requests
+//      add function to delete edit service requests
+//      create option to edit user data
+//      create option to delete user
 
 
 
