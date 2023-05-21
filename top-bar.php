@@ -13,7 +13,7 @@
         include "php/notification.inc.php";
         //notification($_GET["error"]);
         if (strcasecmp($_SESSION["role"], "admin") === 0) {
-            echo '<a href="./adminPanel.php" class="material-symbols-outlined">auto_fix</a>';
+            echo '<a href="/adminPanel.php" class="material-symbols-outlined">auto_fix</a>';
             //TODO: add profil site with user data
             echo '<a href="#" class="material-symbols-outlined">account_circle</a>';
         }

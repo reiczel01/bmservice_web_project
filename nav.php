@@ -9,7 +9,7 @@
         <li class="list"> <a href="/service.php"> <span class="icon"><i class="material-symbols-outlined"> build </i></span> <span class="title">Serwis</span> </a> </li>
         <li class="list"> <a href="/timetable.php"> <span class="icon"><i class="material-symbols-outlined"> event </i></span> <span class="title">Terminarz</span> </a> </li>
         <li class="list"> <a href="/serviceHistory.php"> <span class="icon"><i class="material-symbols-outlined"> manage_history </i></span> <span class="title">Historia napraw</span> </a> </li>
-        <li class="list"> <a href="#"> <span class="icon"><i class="material-symbols-outlined"> contact_page </i></span> <span class="title">Kontakt</span> </a> </li>
+        <li class="list"> <a href="/contact.php"> <span class="icon"><i class="material-symbols-outlined"> contact_page </i></span> <span class="title">Kontakt</span> </a> </li>
         <?php
         session_start();
         if (isset($_SESSION["userid"])) {

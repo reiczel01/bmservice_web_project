@@ -45,8 +45,9 @@ include('nav.php');
                         <div class="field">
                             <span class="material-symbols-outlined">date_range</span>
                             <input class="input-field" type="date" placeholder="Data przyjęcia" id="start" name="trip-start"
-                                   value="2018-07-22"
-                                   min="2018-01-01" max="2023-12-31">
+                                   value=""
+                                   min="" max="">
+                            <script type="text/javascript" src="js/timeLim.js"></script>
                         </div>
                         <h3 class="formTitle">Usterka:</h3>
                         <div class="field">

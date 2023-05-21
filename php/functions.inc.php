@@ -436,6 +436,7 @@ function createTwoDimensionalArrayOfServiceRequests($conn, $user_id)
         exit();
     }
 
+
     mysqli_stmt_bind_param($stmt, "i", $user_id);
 
     mysqli_stmt_execute($stmt);
@@ -456,7 +457,36 @@ function createTwoDimensionalArrayOfServiceRequests($conn, $user_id)
 //      add function to delete edit service requests
 //      create option to edit user data
 //      create option to delete user
+function getUsersAndRoles() {
+    // Zapytanie SQL
+    $sql = "SELECT users.user_id, users.email, users.username, roles.role_name
+            FROM users
+            INNER JOIN roles ON users.user_id = roles.user_id
+            ORDER BY users.user_id ASC";
 
+    $result = $conn->query($sql);
+
+    // Tablica do przechowywania wyników
+    $data = array();
+
+    // Pobieranie wyników zapytania
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $data[] = array(
+                'id' => $row['user_id'],
+                'email' => $row['email'],
+                'username' => $row['username'],
+                'role_name' => $row['role_name']
+            );
+        }
+    }
+
+    // Zamknięcie połączenia z bazą danych
+    $conn->close();
+
+    // Zwrócenie danych
+    return $data;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

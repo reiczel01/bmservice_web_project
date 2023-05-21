@@ -27,27 +27,34 @@ include('nav.php');
         <table class="product-display-table">
             <thead>
             <tr>
-                <th>Zdjęcie</th>
-                <th>Nazwa</th>
-                <th>Cena</th>
-                <th>Kategoria</th>
-                <th>Opis</th>
-                <th>Akcja</th>
+                <th>Panele</th>
+                <th>akcja</th>
             </tr>
             </thead>
-            <?php while($row = $result->fetch_assoc()){ ?>
                 <tr>
-                    <td><img src="uploaded_img/<?php echo htmlspecialchars($row['image']); ?>" height="100" alt=""></td>
-                    <td><?php echo htmlspecialchars($row['Nazwa']); ?></td>
-                    <td><?php echo htmlspecialchars($row['Cena']); ?>zł</td>
-                    <td><?php echo htmlspecialchars($row['NazwaKategorii']); ?></td>
-                    <td><?php echo htmlspecialchars($row['Opis']); ?></td>
+                    <td>Panel urzytkowników</td>
                     <td>
-                        <a href="admin_update.php?edit=<?php echo htmlspecialchars($row['ProduktID']); ?>" class="btn"> <i class="fas fa-edit"></i> edit </a>
-                        <a href="admin_page.php?delete=<?php echo htmlspecialchars($row['ProduktID']); ?>" class="btn"> <i class="fas fa-trash"></i> delete </a>
+                        <a href="/adminPanelUsers.php" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
                     </td>
                 </tr>
-            <?php } ?>
+                <tr>
+                    <td>Panel adresów</td>
+                    <td>
+                        <a href="admin_update.php?edit=<?php echo htmlspecialchars($row['ProduktID']); ?>" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Panel samochodów</td>
+                    <td>
+                        <a href="admin_update.php?edit=<?php echo htmlspecialchars($row['ProduktID']); ?>" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Panel zgłoszeń</td>
+                    <td>
+                        <a href="admin_update.php?edit=<?php echo htmlspecialchars($row['ProduktID']); ?>" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
+                    </td>
+                </tr>
         </table>
     </div>
 </div>

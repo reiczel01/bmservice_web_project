@@ -46,6 +46,13 @@ body {
   flex: 0 0 calc(66.66667% - 20px);
   padding: 0 10px;
 }
+
+.col-12 {
+  box-sizing: border-box;
+  flex: 0 0 100%; /* Kolumna zajmuje 100% szerokości */
+  padding: 0 10px; /* Ustawienie marginesów kolumn */
+}
+
   
   /* Breakpointy */
   @media (min-width: 576px) { /* SM */
