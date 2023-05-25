@@ -457,11 +457,11 @@ function createTwoDimensionalArrayOfServiceRequests($conn, $user_id)
 //      add function to delete edit service requests
 //      create option to edit user data
 //      create option to delete user
-function getUsersAndRoles() {
+function getUsersAndRoles($conn) {
     // Zapytanie SQL
     $sql = "SELECT users.user_id, users.email, users.username, roles.role_name
             FROM users
-            INNER JOIN roles ON users.user_id = roles.user_id
+            LEFT JOIN roles ON users.user_id = roles.user_id
             ORDER BY users.user_id ASC";
 
     $result = $conn->query($sql);
@@ -487,6 +487,66 @@ function getUsersAndRoles() {
     // Zwrócenie danych
     return $data;
 }
+function deleteUser($user_id, $conn) {
+    // Rozpoczęcie transakcji
+    $conn->begin_transaction();
+
+    try {
+        // Usunięcie rekordów z tabeli "service_realisations" powiązanych z użytkownikiem
+        $sql = "DELETE FROM service_realisations WHERE request_id IN 
+                (SELECT request_id FROM service_requests WHERE car_id IN 
+                (SELECT car_id FROM cars WHERE user_id = ?))";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+
+        // Usunięcie rekordów z tabeli "service_requests" powiązanych z użytkownikiem
+        $sql = "DELETE FROM service_requests WHERE car_id IN 
+                (SELECT car_id FROM cars WHERE user_id = ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+
+        // Usunięcie rekordów z tabeli "cars" powiązanych z użytkownikiem
+        $sql = "DELETE FROM cars WHERE user_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+
+        // Usunięcie rekordów z tabeli "roles" powiązanych z użytkownikiem
+        $sql = "DELETE FROM roles WHERE user_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+
+        // Usunięcie rekordów z tabeli "users_data" powiązanych z użytkownikiem
+        $sql = "DELETE FROM users_data WHERE user_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+
+        // Usunięcie użytkownika z tabeli "users"
+        $sql = "DELETE FROM users WHERE user_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+
+        // Zatwierdzenie transakcji
+        $conn->commit();
+
+        echo "Użytkownik został pomyślnie usunięty.";
+    } catch (Exception $e) {
+        // W przypadku błędu, wycofanie transakcji
+        $conn->rollback();
+
+        echo "Wystąpił błąd podczas usuwania użytkownika: " . $e->getMessage();
+    }
+
+    // Zamknięcie połączenia z bazą danych
+    $conn->close();
+}
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
