@@ -17,8 +17,8 @@ if (isset($_SESSION["userid"])) {
             <td>' . $car["registration_nr"] . '</td>
             <td>' . $car["production_year"] . '</td>
             <td style="padding: 1rem">
-                <a href="../adminUserDataEdit.php?data_id=' . $car["car_id"] . '" class="btn"> <span class="material-symbols-outlined">edit</span></a>
-                <a href="php/deleteUserData.inc.php?data_id=' . $car["car_id"] . '" class="btn-danger"><span class="material-symbols-outlined">delete_forever</span></a>
+                <a href="../adminCarDataEdit.php?car_id=' . $car["car_id"] . '" class="btn"> <span class="material-symbols-outlined">edit</span></a>
+                <a href="php/deleteCarData.inc.php?car_id=' . $car["car_id"] . '" class="btn-danger"><span class="material-symbols-outlined">delete_forever</span></a>
             </td>
         </tr>';
     }

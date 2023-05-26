@@ -611,6 +611,42 @@ function getAllCars($conn) {
     return $cars;
 }
 
+function deleteCar($conn, $carId) {
+    // Przygotuj zapytanie SQL do usunięcia samochodu
+    $query = "DELETE FROM cars WHERE car_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $carId);
+    mysqli_stmt_execute($stmt);
+
+    // Sprawdź, czy usunięto rekord
+    if (mysqli_stmt_affected_rows($stmt) > 0) {
+        // Rekord został pomyślnie usunięty
+        return true;
+    } else {
+        // Nie udało się usunąć rekordu
+        return false;
+    }
+}
+
+function getCarDataById($conn, $carId) {
+    // Przygotuj zapytanie SQL
+    $query = "SELECT * FROM cars WHERE car_id = ?";
+
+    // Przygotuj i wykonaj zapytanie
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $carId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    // Sprawdź, czy zapytanie zwróciło jakieś wyniki
+    if (mysqli_num_rows($result) > 0) {
+        // Pobierz dane samochodu
+        return mysqli_fetch_assoc($result);
+    } else {
+        // Jeżeli samochód nie został znaleziony, zwróć false
+        return false;
+    }
+}
 
 
 
