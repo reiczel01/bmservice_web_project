@@ -487,64 +487,132 @@ function getUsersAndRoles($conn) {
     // Zwrócenie danych
     return $data;
 }
-function deleteUser($user_id, $conn) {
-    // Rozpoczęcie transakcji
-    $conn->begin_transaction();
+function deleteUser($conn, $userId) {
+    // Define the queries
+    $tables = array('cars', 'roles', 'users_data', 'users');
 
-    try {
-        // Usunięcie rekordów z tabeli "service_realisations" powiązanych z użytkownikiem
-        $sql = "DELETE FROM service_realisations WHERE request_id IN 
-                (SELECT request_id FROM service_requests WHERE car_id IN 
-                (SELECT car_id FROM cars WHERE user_id = ?))";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
+    // Execute the queries
+    foreach($tables as $table) {
+        $query = "DELETE FROM {$table} WHERE user_id = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $userId);
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_store_result($stmt);
+            if(mysqli_stmt_affected_rows($stmt) == 0) {
+                // If there were no rows to delete, continue to the next table
+                continue;
+            }
+        } else {
+            // Error occurred while executing the query
+            echo "Error deleting record in table {$table}: " . mysqli_error($conn);
+        }
+        mysqli_stmt_close($stmt);
+    }
+}
+function getUserDataWithRoles($conn, $userId) {
+    // Przygotuj zapytanie SQL
+    $query = "SELECT users.*, roles.role_name FROM users 
+              LEFT JOIN roles ON users.user_id = roles.user_id
+              WHERE users.user_id = ?";
 
-        // Usunięcie rekordów z tabeli "service_requests" powiązanych z użytkownikiem
-        $sql = "DELETE FROM service_requests WHERE car_id IN 
-                (SELECT car_id FROM cars WHERE user_id = ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
+    // Przygotuj i wykonaj zapytanie
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $userId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-        // Usunięcie rekordów z tabeli "cars" powiązanych z użytkownikiem
-        $sql = "DELETE FROM cars WHERE user_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
+    // Sprawdź, czy zapytanie zwróciło jakieś wyniki
+    if(mysqli_num_rows($result) > 0){
+        // Zwróć dane użytkownika
+        return mysqli_fetch_assoc($result);
+    } else {
+        // Zwróć fałsz, jeśli użytkownik nie został znaleziony
+        return false;
+    }
+}
 
-        // Usunięcie rekordów z tabeli "roles" powiązanych z użytkownikiem
-        $sql = "DELETE FROM roles WHERE user_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
+function getUsersData($conn) {
+    // Zapytanie SQL
+    $sql = "SELECT * FROM users_data";
 
-        // Usunięcie rekordów z tabeli "users_data" powiązanych z użytkownikiem
-        $sql = "DELETE FROM users_data WHERE user_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
+    $result = $conn->query($sql);
 
-        // Usunięcie użytkownika z tabeli "users"
-        $sql = "DELETE FROM users WHERE user_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
+    // Tablica do przechowywania wyników
+    $data = array();
 
-        // Zatwierdzenie transakcji
-        $conn->commit();
-
-        echo "Użytkownik został pomyślnie usunięty.";
-    } catch (Exception $e) {
-        // W przypadku błędu, wycofanie transakcji
-        $conn->rollback();
-
-        echo "Wystąpił błąd podczas usuwania użytkownika: " . $e->getMessage();
+    // Pobieranie wyników zapytania
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
     }
 
     // Zamknięcie połączenia z bazą danych
     $conn->close();
+
+    // Zwrócenie danych
+    return $data;
 }
+function deleteUserData($conn, $dataId) {
+    // Przygotuj zapytanie SQL
+    $query = "DELETE FROM users_data WHERE data_id = ?";
+
+    // Przygotuj i wykonaj zapytanie
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $dataId);
+    mysqli_stmt_execute($stmt);
+
+    // Sprawdź, czy rekord został usunięty
+    if (mysqli_stmt_affected_rows($stmt) > 0) {
+        return true; // Zwróć prawdę jeśli rekord został usunięty
+    } else {
+        return false; // Zwróć fałsz jeśli rekord nie został usunięty
+    }
+}
+function getUserDataById($conn, $dataId) {
+    // Przygotuj zapytanie SQL
+    $query = "SELECT * FROM users_data WHERE data_id = ?";
+
+    // Przygotuj i wykonaj zapytanie
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $dataId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    // Sprawdź, czy zapytanie zwróciło jakieś wyniki
+    if(mysqli_num_rows($result) > 0){
+        // Zwróć dane użytkownika
+        return mysqli_fetch_assoc($result);
+    } else {
+        // Zwróć fałsz, jeśli dane nie zostały znalezione
+        return false;
+    }
+}
+
+function getAllCars($conn) {
+    // Zapytanie SQL
+    $query = "SELECT * FROM cars";
+
+    // Wykonaj zapytanie
+    $result = mysqli_query($conn, $query);
+
+    // Tablica do przechowywania danych
+    $cars = array();
+
+    // Pobierz wyniki zapytania
+    while ($row = mysqli_fetch_assoc($result)) {
+        $cars[] = $row;
+    }
+
+    // Zwolnij pamięć zajmowaną przez wynik zapytania
+    mysqli_free_result($result);
+
+    // Zwróć tablicę z danymi
+    return $cars;
+}
+
+
+
 
 
 

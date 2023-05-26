@@ -15,7 +15,7 @@ if(isset($_SESSION["userid"])) {
                 <td>'. $user["username"] .'</td>
                 <td>'. $user["role_name"] .'</td>
                 <td style="padding: 1rem">
-                    <a href="" class="btn"> <span class="material-symbols-outlined">edit</span></a>
+                    <a href="../adminUserEdit.php?user_id='.$user["id"].'" class="btn"> <span class="material-symbols-outlined">edit</span></a>
                     <a href="php/deleteUser.inc.php?user_id='.$user["id"].'" class="btn-danger"><span class="material-symbols-outlined">delete_forever</span></a>
                 </td>
             </tr>';

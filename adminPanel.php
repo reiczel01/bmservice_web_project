@@ -11,6 +11,7 @@ session_start();
             @import url("css/data-table.css");
             @import url("css/car.css");
             @import url("scss/nav.css");
+            @import url("scss/btn.css");
             @import url("scss/top-bar.css");
             @import url("scss/content.css");
             @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0");
@@ -40,13 +41,13 @@ include('nav.php');
                 <tr>
                     <td>Panel adresów</td>
                     <td>
-                        <a href="admin_update.php?edit=<?php echo htmlspecialchars($row['ProduktID']); ?>" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
+                        <a href="/adminPanelUsersData.php" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
                     </td>
                 </tr>
                 <tr>
                     <td>Panel samochodów</td>
                     <td>
-                        <a href="admin_update.php?edit=<?php echo htmlspecialchars($row['ProduktID']); ?>" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
+                        <a href="/adminPanelCarData.php" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
                     </td>
                 </tr>
                 <tr>
