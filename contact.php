@@ -27,7 +27,7 @@ include('nav.php');
                 <h3>Dane kontaktowe:</h3>
                 <br>
                 <H4><strong>Biuro:</strong></H4>
-                <p>ul. Starowa 22 92-374 Łóóź</p>
+                <p>ul. Kongresowa, 90-001 Łódź</p>
                 <p>NIP: 725 111 55 56</p>
                 <p>tel. +48 598 235 458</p>
                 <p>e-mail: biuro@bmservice.com</p>

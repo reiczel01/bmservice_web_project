@@ -29,7 +29,7 @@ include('nav.php');
                 <?php
                 if (!isset($_SESSION['userid'])) {
                     echo '
-                <form class="form" action="/php/login.inc.php" id="login" method="post">
+                <form class="form" action="/php/login.inc.php" id="login" method="post" style="padding-bottom: 40px">
                     <p id="heading">Login</p>
                     <div class="field">
                         <span class="material-symbols-outlined">badge</span>
@@ -43,7 +43,7 @@ include('nav.php');
                         <button class="button1" type="submit" name="login_btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
                         <button class="button2" name="signup_btn">Sign Up</button>
                     </div>
-                    <button class="button3">Forgot Password</button>
+                
                 </form>';
                 } else {
                     echo '

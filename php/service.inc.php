@@ -12,33 +12,33 @@ if(isset($_POST["carRegistration-submit"])) {
     checkSession();
 
     if(isUserLoggedIn()){
-        header("Location: /service.php?error=notloggedin");
+        header("Location: /cars.php?error=notloggedin");
         exit();
     }
 
     if(emptyInputCar($carRegistration, $vin, $engineDesignation, $model, $year)) {
-        header("Location: /service.php?error=emptyinput");
+        header("Location: /cars.php?error=emptyinput");
         exit();
     }
 
     if(carRegistrationCheck($carRegistration)) {
-        header("Location: /service.php?error=invalidcarregistration");
+        header("Location: /cars.php?error=invalidcarregistration");
         exit();
     }
 
     if(carVinCheck($vin)) {
-        header("Location: /service.php?error=invalidvin");
+        header("Location: /cars.php?error=invalidvin");
         echo("empty input");
         exit();
     }
 
     if(!yearCheck($year)) {
-        header("Location: /service.php?error=invalidyear");
+        header("Location: /cars.php?error=invalidyear");
         exit();
     }
 
     if(carExists($conn, $carRegistration)) {
-        header("Location: /service.php?error=carexists");
+        header("Location: /cars.php?error=carexists");
         exit();
     }
 

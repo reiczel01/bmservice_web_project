@@ -53,7 +53,7 @@ include('nav.php');
                 <tr>
                     <td>Panel zgłoszeń</td>
                     <td>
-                        <a href="admin_update.php?edit=<?php echo htmlspecialchars($row['ProduktID']); ?>" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
+                        <a href="/adminPanelServiceData.php" class="btn"> <i class="fas fa-edit"></i> Przejdź </a>
                     </td>
                 </tr>
         </table>

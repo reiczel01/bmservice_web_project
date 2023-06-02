@@ -18,6 +18,13 @@ session_start();
 
 <body>
 <?php
+include_once 'php/dbHandler.inc.php';
+include_once 'php/functions.inc.php';
+
+$dates = getRepeatedDates($conn);
+$_SESSION["busyDates"] = $dates;
+$busyDates = $_SESSION["busyDates"];
+echo '<div id="busyDates"  data-dates="' . htmlspecialchars(json_encode($busyDates), ENT_QUOTES, 'UTF-8') . '"></div>';
 include('top-bar.php');
 include('nav.php');
 ?>
@@ -26,25 +33,28 @@ include('nav.php');
         <div class="row">
             <div class="col-2"></div>
             <div class="col-8">
-                <form class="form" id="carRegistration" action="/php/service.inc.php" method="post">
+                <form class="form" id="carRegistration" action="/php/serviceRequestCreate.inc.php" method="post">
                     <h1 class="formTitle">Zgłoszenie serwisowe:</h1>
                     <div class="tab">
                         <div class="field">
                             <span class="material-symbols-outlined">directions_car</span>
                             <?php
                             include 'php/carSelector.inc.php';
-                            //TODO: add adress info selector
-
-                            //TODO: make posible to add new car service request
+                            ?>
+                        </div>
+                        <div class="field">
+                            <span class="material-symbols-outlined">contact_page</span>
+                            <?php
+                            include 'php/userDataSelector.inc.php';
                             ?>
                         </div>
                         <div class="field">
                             <span class="material-symbols-outlined">new_label</span>
-                            <input placeholder="Przebieg" class="input-field">
+                            <input placeholder="Przebieg" class="input-field" name="milage" required>
                         </div>
                         <div class="field">
                             <span class="material-symbols-outlined">date_range</span>
-                            <input class="input-field" type="date" placeholder="Data przyjęcia" id="start" name="trip-start"
+                            <input class="input-field" type="date" placeholder="Data przyjęcia" id="start" name="date"
                                    value=""
                                    min="" max="">
                             <script type="text/javascript" src="js/timeLim.js"></script>
@@ -52,8 +62,8 @@ include('nav.php');
                         <h3 class="formTitle">Usterka:</h3>
                         <div class="field">
                             <span class="material-symbols-outlined">description</span>
-                            <textarea class="input-field"
-                                      rows="2" cols="33">
+                            <textarea class="input-field" name="description" placeholder="Opis usterki"
+                                      rows="2" cols="33" required>
                             </textarea>
                         </div>
                     </div>

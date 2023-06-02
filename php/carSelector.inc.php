@@ -8,7 +8,7 @@ if (isset($_SESSION["userid"])) {
     // Pobranie danych z bazy danych
     $carsData = createTwoDimensionalArrayOfCars($conn, $user_id);
     // Przejście przez dane i wypełnienie tabeli
-    echo '<select class="input-field">';
+    echo '<select class="input-field" name="carId">';
     foreach ($carsData as $car) {
         echo '<option style="background: #2b343b;" value="'.$car["car_id"].'">' . $car["model"] . " " . $car["registration_nr"] . '</option>';
     }

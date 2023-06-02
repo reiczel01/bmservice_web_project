@@ -1,5 +1,6 @@
 <?php
 session_start();
+echo '<link rel="stylesheet" href="/scss/btn.css">';
 if (isset($_SESSION["userid"])) {
     include_once 'dbHandler.inc.php';
     include_once 'functions.inc.php';
@@ -9,6 +10,7 @@ if (isset($_SESSION["userid"])) {
     //var_dump($carsData);
     foreach ($carsData as $car) {
         echo '
+        
         <tr>
             <td>' . $car["user_id"] . '</td>
             <td>' . $car["make"] . '</td>

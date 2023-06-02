@@ -32,3 +32,39 @@ if (maxMM < 10) {
 
 var maxDateFormatted = maxYYYY + '-' + maxMM + '-' + maxDD;
 document.getElementById("start").setAttribute("max", maxDateFormatted);
+
+// Wykluczenie dat z busyDates
+var busyDatesElement = document.getElementById('busyDates');
+var busyDatesJson = busyDatesElement.getAttribute('data-dates');
+var busyDates = JSON.parse(busyDatesJson);
+
+var dateInput = document.getElementById("start");
+var datesToExclude = [];
+
+for (var i = 0; i < busyDates.length; i++) {
+    var busyDate = new Date(busyDates[i]);
+    var busyDD = busyDate.getDate();
+    var busyMM = busyDate.getMonth() + 1;
+    var busyYYYY = busyDate.getFullYear();
+
+    if (busyDD < 10) {
+        busyDD = '0' + busyDD;
+    }
+    if (busyMM < 10) {
+        busyMM = '0' + busyMM;
+    }
+
+    var busyDateFormatted = busyYYYY + '-' + busyMM + '-' + busyDD;
+    if (busyDateFormatted >= tomorrowFormatted && busyDateFormatted <= maxDateFormatted) {
+        datesToExclude.push(busyDateFormatted);
+    }
+}
+
+dateInput.addEventListener("input", function () {
+    var selectedDate = this.value;
+    if (datesToExclude.includes(selectedDate)) {
+        this.setCustomValidity("Wybrana data jest niedostępna");
+    } else {
+        this.setCustomValidity("");
+    }
+});

@@ -13,7 +13,6 @@ session_start();
         @import url("scss/nav.css");
         @import url("scss/top-bar.css");
         @import url("scss/content.css");
-        @import url("scss/btn.scss");
         @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0");
     </style>
 </head>

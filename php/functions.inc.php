@@ -168,6 +168,7 @@ function loginUser($conn, $username, $password): void
         session_start();
         $_SESSION["userid"] = $uidExists["user_id"];
         $_SESSION["useremail"] = $uidExists["email"];
+        $_SESSION["username"] = $uidExists["username"];
         $sql = "SELECT role_name FROM roles WHERE user_id = ?;";
         $stmt = mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt, $sql)) {
@@ -210,23 +211,26 @@ function isUserLoggedIn() {
 
 function secure_input_XSS($input): string
 {
-    $secure_input = htmlspecialchars(strip_tags(trim($input)), ENT_QUOTES, 'UTF-8');
+    $secure_input = htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
     return $secure_input;
 }
-function secure_sql($input): string
+
+function secure_sql($conn, $input): string
 {
     $secure_input = mysqli_real_escape_string($conn, $input);
     return $secure_input;
 }
-function secure_input($input): string
+
+function secure_input($conn, $input): string
 {
     $secure_input = secure_input_XSS($input);
-    $secure_input = secure_sql($secure_input);
+    $secure_input = secure_sql($conn, $secure_input);
     return $secure_input;
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Sekcja rejestracji pojazdu                                                                    /////
-/// Są one wykonywane z service.php i service.inc.php /////////////////////////////////////////////////
+/// Są one wykonywane z cars.php i service.inc.php /////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 function emptyInputCar($carRegistration, $carVin, $carEngineDesignation, $carModel, $carYear): bool
 {
@@ -281,7 +285,7 @@ function carExists($conn, $carRegistration): bool
     WHERE registration_nr = ?;";
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)) {
-        header("Location: ../service.php?error=stmtfailed");
+        header("Location: ../cars.php?error=stmtfailed");
         exit();
     }
 
@@ -305,20 +309,20 @@ function registerCar($conn, $user_id, $engine_designation, $model, $carRegistrat
     $sql = "INSERT INTO cars (user_id, make, model, registration_nr, vin, production_year) VALUES (?, ?, ?, ?, ?, ?);";
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)) {
-        header("Location: ../service.php?error=stmtfailed");
+        header("Location: ../cars.php?error=stmtfailed");
         exit();
     }
 
     mysqli_stmt_bind_param($stmt, "issssi", $user_id, $engine_designation, $model, $carRegistration, $vin, $year);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
-    header("Location: ../service.php?error=none");
+    header("Location: ../cars.php?error=none");
     exit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Sekcja tworzenia danych do tabeli cars                                                        /////
-/// Są one wykonywane z service.php i service.inc.php /////////////////////////////////////////////////
+/// Są one wykonywane z cars.php i service.inc.php /////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 function createTwoDimensionalArrayOfCars($conn, $user_id) {
     // Tworzymy pustą dwuwymiarową tablicę, do której będą zapisywane wypisy z bazy danych
@@ -334,8 +338,8 @@ function createTwoDimensionalArrayOfCars($conn, $user_id) {
 
     // Sprawdzamy, czy przygotowanie się powiodło
     if (!mysqli_stmt_prepare($stmt, $sql)) {
-        // W razie niepowodzenia przekierowujemy użytkownika na stronę service.php z informacją o błędzie
-        header("Location: ../service.php?error=stmtfailed");
+        // W razie niepowodzenia przekierowujemy użytkownika na stronę cars.php z informacją o błędzie
+        header("Location: ../cars.php?error=stmtfailed");
         exit();
     }
 
@@ -370,7 +374,7 @@ function createTwoDimensionalArrayOfCars($conn, $user_id) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Sekcja tworzenia danych do tabeli service_request                                             /////
-/// Są one wykonywane z service.php i service.inc.php /////////////////////////////////////////////////
+/// Są one wykonywane z cars.php i service.inc.php /////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 function emptyServiceRequest($conn, $user_id, $car_id, $date_requested, $milage, $description) {
     if (empty($user_id) || empty($car_id) || empty($date_requested) || empty($milage) || empty($description)) {
@@ -427,12 +431,12 @@ function createTwoDimensionalArrayOfServiceRequests($conn, $user_id)
             LEFT JOIN service_requests sr ON c.car_id = sr.car_id
             LEFT JOIN service_realisations srr ON sr.request_id = srr.request_id
             WHERE c.user_id = ? AND sr.request_id IS NOT NULL
-            ORDER BY sr.date_requested DESC";
+            ORDER BY sr.date_requested ASC";
 
     $stmt = mysqli_stmt_init($conn);
 
     if (!mysqli_stmt_prepare($stmt, $sql)) {
-        header("Location: ../service.php?error=stmtfailed");
+        header("Location: ../cars.php?error=stmtfailed");
         exit();
     }
 
@@ -449,6 +453,91 @@ function createTwoDimensionalArrayOfServiceRequests($conn, $user_id)
 
     return $cars_service;
 }
+
+function getUsersDataById($conn, $userId) {
+    // Zapytanie SQL
+    $query = "SELECT * FROM users_data WHERE user_id = ?";
+
+    // Przygotowanie zapytania
+    $stmt = mysqli_prepare($conn, $query);
+
+    // Przypisanie wartości do parametru zapytania
+    mysqli_stmt_bind_param($stmt, "i", $userId);
+
+    // Wykonanie zapytania
+    mysqli_stmt_execute($stmt);
+
+    // Pobranie wyników zapytania
+    $result = mysqli_stmt_get_result($stmt);
+
+    // Sprawdzenie, czy dane istnieją
+    if (mysqli_num_rows($result) > 0) {
+        // Pobranie wszystkich wierszy z wyników
+        $userData = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        return $userData;
+    } else {
+        return null;
+    }
+}
+
+function getRepeatedDates($conn) {
+
+    // Zapytanie SQL
+    $query = "SELECT date_requested
+              FROM service_requests
+              GROUP BY date_requested
+              HAVING COUNT(*) > 3";
+
+    // Przygotowanie zapytania
+    $stmt = mysqli_prepare($conn, $query);
+
+    // Wykonanie zapytania
+    mysqli_stmt_execute($stmt);
+
+    // Pobranie wyników zapytania
+    $result = mysqli_stmt_get_result($stmt);
+
+    // Przygotowanie tablicy na daty
+    $dates = array();
+
+    // Przejście przez wyniki i zapisanie dat do tablicy
+    while ($row = mysqli_fetch_assoc($result)) {
+        $date = $row['date_requested'];
+        $dates[] = $date;
+    }
+
+    // Zwrócenie tablicy z datami
+    return $dates;
+}
+
+function addServiceRequest($conn, $carId, $dataId, $description, $dateRequested, $mileage) {
+    $carId = intval($carId);
+    $dataId = intval($dataId);
+    $description = mysqli_real_escape_string($conn, $description);
+    $dateRequested = mysqli_real_escape_string($conn, $dateRequested);
+    $mileage = intval($mileage);
+
+    // Zapytanie SQL
+    $query = "INSERT INTO service_requests (car_id, data_id, description, date_requested, milage) VALUES (?, ?, ?, ?, ?)";
+
+    // Przygotowanie zapytania
+    $stmt = mysqli_prepare($conn, $query);
+
+    // Przypisanie wartości do parametrów zapytania
+    mysqli_stmt_bind_param($stmt, "iisss", $carId, $dataId, $description, $dateRequested, $mileage);
+
+    // Wykonanie zapytania
+    $result = mysqli_stmt_execute($stmt);
+
+    // Sprawdzenie, czy dodanie rekordu powiodło się
+    if ($result) {
+        return true; // Dodanie rekordu zakończone sukcesem
+    } else {
+        return false; // Dodanie rekordu nie powiodło się
+    }
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Sekcja tworzenia i edytowania danych do adminPanel.php                                        /////
 /// Są one wykonywane z adminPanel.php i adminPanel.inc.php //////////////////////////////////////////
@@ -648,6 +737,176 @@ function getCarDataById($conn, $carId) {
     }
 }
 
+function getServiceData($conn) {
+    $sql = "SELECT service_requests.*, service_realisations.*, 
+                   service_realisations.description AS realisation_description,
+                   service_requests.description AS request_description,
+                     service_requests.request_id AS request_id_data,
+                        service_realisations.request_id AS request_id_realisation
+            FROM service_requests
+            LEFT JOIN service_realisations ON service_requests.request_id = service_realisations.request_id";
+
+    $result = $conn->query($sql);
+
+    $data = array();
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+    }
+
+    return $data;
+}
+
+function deleteServiceRequest($conn, $requestId, $realisationId) {
+    // Usunięcie zrealizowania serwisowego (jeśli istnieje)
+    $query = "DELETE FROM service_realisations WHERE realisation_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $realisationId);
+    mysqli_stmt_execute($stmt);
+
+    // Sprawdzenie, czy usunięto jakiekolwiek wiersze z tabeli service_realisations
+    $deletedRealisations = mysqli_affected_rows($conn);
+
+    // Usunięcie zgłoszenia serwisowego (jeśli istnieje)
+    $query = "DELETE FROM service_requests WHERE request_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $requestId);
+    mysqli_stmt_execute($stmt);
+
+    // Sprawdzenie, czy usunięto jakiekolwiek wiersze z tabeli service_requests
+    $deletedRequests = mysqli_affected_rows($conn);
+
+    // Sprawdzenie, czy usunięto jakiekolwiek wiersze w obu tabelach
+    if ($deletedRealisations > 0 || $deletedRequests > 0) {
+        // Zwrócenie true, jeśli usunięto zgłoszenie serwisowe
+        return true;
+    }
+
+    // Zwrócenie false, jeśli nie usunięto zgłoszenia serwisowego
+    return false;
+}
+
+function getServiceDataByRequestAndRealisationId($conn, $requestId, $realisationId) {
+    $query = "SELECT * FROM service_requests
+              WHERE request_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $requestId);
+    mysqli_stmt_execute($stmt);
+    $requestData = mysqli_stmt_get_result($stmt);
+
+    $query = "SELECT * FROM service_realisations
+              WHERE realisation_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $realisationId);
+    mysqli_stmt_execute($stmt);
+    $realisationData = mysqli_stmt_get_result($stmt);
+
+    $data = array(
+        'request_data' => null,
+        'realisation_data' => null
+    );
+
+    if ($requestData && mysqli_num_rows($requestData) > 0) {
+        $data['request_data'] = mysqli_fetch_assoc($requestData);
+    }
+
+    if ($realisationData && mysqli_num_rows($realisationData) > 0) {
+        $data['realisation_data'] = mysqli_fetch_assoc($realisationData);
+    }
+
+    return $data;
+}
+
+function getTechnicianData($conn) {
+    $sql = "SELECT users.*, users_data.*, roles.role_name
+            FROM users
+            LEFT JOIN users_data ON users.user_id = users_data.user_id
+            INNER JOIN roles ON users.user_id = roles.user_id
+            WHERE roles.role_name = 'tech'";
+
+    $result = $conn->query($sql);
+
+    $data = array();
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+    }
+
+    return $data;
+}
+
+function getUserDataByUsername($conn, $username)
+{
+    $query = "SELECT * FROM users_data WHERE user_id = (SELECT user_id FROM users WHERE username = '$username')";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result || mysqli_num_rows($result) === 0) {
+        return null; // Użytkownik o podanej nazwie nie istnieje
+    }
+
+    $user_data = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+
+    return $user_data;
+}
+
+function getFirstRecord($conn, $data_id) {
+    // Zabezpieczanie danych wejściowych
+    $data_id = mysqli_real_escape_string($conn, $data_id);
+
+    // Zapytanie SQL
+    $query = "SELECT * FROM users_data WHERE data_id = $data_id LIMIT 1";
+
+    // Wykonanie zapytania
+    $result = mysqli_query($conn, $query);
+
+    // Sprawdzanie, czy zapytanie zwróciło wynik
+    if(mysqli_num_rows($result) > 0) {
+        // Zwrócenie pierwszego wyniku
+        return mysqli_fetch_assoc($result);
+    }
+
+    // Zwrócenie null, jeżeli nie znaleziono wyników
+    return null;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Funkcja wyświetlająca i dodające dane urzytkownika                                                      /////
+/// //////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getUserData($conn, $userId) {
+    $query = "SELECT * FROM users_data WHERE user_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $userId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (mysqli_num_rows($result) > 0) {
+        $userData = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        return $userData;
+    } else {
+        return false;
+    }
+}
+
+function registerUserData($conn, $user_id, $first_name, $last_name, $company_name, $vat_id, $address, $phone_number)
+{
+    $query = "INSERT INTO users_data (user_id, first_name, last_name, company_name, vat_id, address, phone_number) 
+              VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "issssss", $user_id, $first_name, $last_name, $company_name, $vat_id, $address, $phone_number);
+
+    if (mysqli_stmt_execute($stmt)) {
+        return true; // Rejestracja danych użytkownika zakończona sukcesem
+    } else {
+        return false; // Błąd podczas rejestracji danych użytkownika
+    }
+}
 
 
 
