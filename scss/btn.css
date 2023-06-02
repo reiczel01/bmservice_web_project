@@ -1,0 +1,47 @@
+:root {
+  --green:#27ae60;
+  --b:#bcbcbc;
+  --red:#880808;
+  --white:#fff;
+  --bg-color:#eee;
+  --box-shadow:0 .5rem 1rem rgba(0,0,0,.1);
+  --border:.1rem solid var(--b);
+}
+
+.btn {
+  display: inline;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  padding: 1rem 1rem;
+  background: var(--green);
+  color: var(--white);
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-danger {
+  display: inline;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  margin: 0.5rem;
+  font-size: 1rem;
+  padding: 1rem 1rem;
+  background: var(--red);
+  color: var(--white);
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: var(--b);
+}
+
+.btn-danger:hover {
+  background: var(--b);
+}
+
+/*# sourceMappingURL=btn.css.map */
