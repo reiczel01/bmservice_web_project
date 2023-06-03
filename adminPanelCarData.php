@@ -1,11 +1,15 @@
 <?php
 session_start();
+if(!isset($_SESSION['userid'])){
+    header("Location: /index.php");
+    exit();
+}
 ?>
 <!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Moja pierwsza strona</title>
+    <title>Panel Administracyjny - Samochody</title>
     <link rel="stylesheet" href="/css/bootstrap-impostor.css">
     <style type="text/css">
         @import url("css/data-table.css");
@@ -24,6 +28,23 @@ include('nav.php');
 ?>
 <div class="content" style="background: #2b343b; border-left: 10px solid #FFFFFF00; border-right: 10px solid #FFFFFF00;">
     <div class="container">
+
+        <script>
+            function searchFunction() {
+                var input, filter, divs, i;
+                input = document.getElementById('search');
+                filter = input.value.toUpperCase();
+                divs = document.getElementsByClassName('rq');
+
+                for (i = 0; i < divs.length; i++) {
+                    if (divs[i].textContent.toUpperCase().indexOf(filter) > -1) {
+                        divs[i].style.display = "";
+                    } else {
+                        divs[i].style.display = "none";
+                    }
+                }
+            }
+        </script>
         <table class="product-display-table">
             <thead>
             <tr>
@@ -33,22 +54,14 @@ include('nav.php');
                 <th>VIN</th>
                 <th>Nr rejestracyjny</th>
                 <th>Data produkcji</th>
-                <th>Akcja</th>
+                <th>Akcja<br><input type="text" id="search" onkeyup="searchFunction()" placeholder="Wyszukaj na stronie...">
+                </th>
             </tr>
             </thead>
             <?php
             include('php/displayCarsData.inc.php');
             ?>
-            <!--<tr>
-                <td>3</td>
-                <td>mat@mat.com</td>
-                <td>mat</td>
-                <td>admin</td>
-                <td>
-                    <a href="admin_update.php?edit=<?php /*echo htmlspecialchars($row['ProduktID']); */?>" class="btn"> <i class="fas fa-edit"></i> edit </a>
-                    <a href="admin_page.php?delete=<?php /*echo htmlspecialchars($row['ProduktID']); */?>" class="btn"> <i class="fas fa-trash"></i> delete </a>
-                </td>
-            </tr>-->
+
         </table>
     </div>
 </div>

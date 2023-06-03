@@ -11,7 +11,7 @@ if (isset($_SESSION["userid"])) {
     foreach ($carsData as $car) {
         echo '
         
-        <tr>
+        <tr class="rq">
             <td>' . $car["user_id"] . '</td>
             <td>' . $car["make"] . '</td>
             <td>' . $car["model"] . '</td>

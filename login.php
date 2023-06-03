@@ -6,7 +6,7 @@ session_start();
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
-    <title>Moja pierwsza strona</title>
+    <title>Zaloguj</title>
     <link rel="stylesheet" href="/css/bootstrap-impostor.css">
     <style type="text/css">
         @import url(scss/nav.css);
@@ -40,15 +40,15 @@ include('nav.php');
                         <input placeholder="Password" class="input-field" type="password" name="password">
                     </div>
                     <div class="btn">
-                        <button class="button1" type="submit" name="login_btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-                        <button class="button2" name="signup_btn">Sign Up</button>
+                        <button class="button1" type="submit" name="login_btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zaloguj się&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                        <button class="button1" name="signup_btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zarejestruj&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
                     </div>
                 
                 </form>';
                 } else {
                     echo '
                 <form class="form" id="login">
-                    <p id="heading">Succesfuly loged in!</p>
+                    <p id="heading">Udało ci się zalogować!</p>
                     <br>
                     <span class="material-symbols-outlined" style="font-size: 120px; color: green;">check_circle</span>
                     <div class="btn">

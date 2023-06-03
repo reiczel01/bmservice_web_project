@@ -5,7 +5,7 @@ session_start();
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Moja pierwsza strona</title>
+    <title>Moje dane</title>
     <link rel="stylesheet" href="/css/bootstrap-impostor.css">
     <style type="text/css">
         @import url("css/data-table.css");
@@ -13,6 +13,8 @@ session_start();
         @import url("scss/nav.css");
         @import url("scss/top-bar.css");
         @import url("scss/content.css");
+        @import url("scss/login.css");
+
         @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0");
     </style>
 </head>
@@ -21,8 +23,8 @@ session_start();
 <?php
 include('top-bar.php');
 include('nav.php');
-?>
-<div class="content" style="background: #2b343b; border-left: 10px solid #FFFFFF00; border-right: 10px solid #FFFFFF00;">
+if(isset($_SESSION['userid'])){
+    echo '<div class="content" style="background: #2b343b; border-left: 10px solid #FFFFFF00; border-right: 10px solid #FFFFFF00;">
     <div class="container">
         <div class="row">
             <div class="col-2" style="display: flex; justify-content: center;">
@@ -65,14 +67,28 @@ include('nav.php');
             </div>
         </div>
         <div class="row">
-            <div class="col-12">
-                <?php
+            <div class="col-12">';
+
                 include 'php/userDataTableCreate.inc.php';
-                ?>
+             echo'   
             </div>
         </div>
     </div>
-</div>
+</div>';
+}else {
+    echo '
+                <form class="form" id="login">
+                    <h1 id="heading" style="color: white;">ZALOGUJ SIĘ!</h1>
+                    <br>
+                    <span class="material-symbols-outlined" style="font-size: 120px; color: red;">cancel</span>
+                    <div class="btn">
+                        <br>
+                        <br>
+                    </div>
+                </form>';
+}
+?>
+
 
 
 </body>

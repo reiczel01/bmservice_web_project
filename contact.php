@@ -5,7 +5,7 @@ session_start();
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Moja pierwsza strona</title>
+    <title>Kontakt</title>
     <link rel="stylesheet" href="/css/bootstrap-impostor.css">
     <style type="text/css">
         @import url("scss/nav.css");

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
-    <title>Moja pierwsza strona</title>
+    <title>Rejestracja</title>
     <link rel="stylesheet" href="/css/bootstrap-impostor.css">
     <style type="text/css">
         @import url(scss/nav.css);
@@ -24,7 +24,7 @@ include('nav.php');
             <div class="col-2" id="cont"></div>
             <div class="col-8">
                 <form class="form" action="/php/signup.inc.php" id="login" method="post">
-                    <p id="heading">Sign Up</p>
+                    <p id="heading">Rejestracja urzytkownika</p>
                     <div class="field">
                         <span class="material-symbols-outlined">badge</span>
                         <input autocomplete="off" placeholder="Username" class="input-field" type="text" name="username">
@@ -42,7 +42,7 @@ include('nav.php');
                         <input placeholder="Re-enter password" class="input-field" type="password" name="passwordRepeat">
                     </div>
                     <div class="btn">
-                        <button class="button1" type="submit" name="signup_btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Login&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                        <button class="button1" type="submit" name="signup_btn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rejestruj&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
                     </div>
                 </form>
             </div>
@@ -53,8 +53,5 @@ include('nav.php');
     {
         header("Location: index.php?error=alreadyLoggedIn");
     }
-    include 'php/notification.inc.php';
-    if (isset($_GET["error"])) {
-        //notification($_GET["error"]);
-    }
+
 

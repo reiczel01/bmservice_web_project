@@ -6,7 +6,7 @@ session_start();
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" href="style.css">
-<title>Moja pierwsza strona</title>
+<title>BMSERVICE</title>
 <link rel="stylesheet" href="/css/bootstrap-impostor.css">
 <style type="text/css">
 	@import url(scss/nav.css);
@@ -15,47 +15,6 @@ session_start();
 	@import url("scss/login.css");
 	@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0");
 </style>
-    <style>
-        /* Style dla slidera */
-        .slider {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .slider-inner {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .slider-item {
-            flex: 0 0 100%;
-            height: 100%;
-        }
-
-        /* Style dla przycisków nawigacyjnych */
-        .slider-controls {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .slider-controls button {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            margin: 0 5px;
-            border-radius: 50%;
-            background-color: gray;
-            border: none;
-            cursor: pointer;
-        }
-
-        .slider-controls button.active {
-            background-color: black;
-        }
-    </style>
 </head>
 
 <body>
@@ -64,63 +23,29 @@ include('top-bar.php');
 include('nav.php');
 ?>
 <div class="content" style="background: none; border-left: 10px solid #FFFFFF00; border-right: 10px solid #FFFFFF00;">
-    <div class="slider">
-        <div class="slider-inner">
-            <div class="slider-item">
-                <img src="images/bmw1.jpeg" alt="Zdjęcie 1">
-            </div>
-            <div class="slider-item">
-                <img src="images/bmw2.jpeg" alt="Zdjęcie 2">
-            </div>
-            <div class="slider-item">
-                <img src="zdjecie3.jpg" alt="Zdjęcie 3">
-            </div>
+    <div class="content" style="background: #2b343b; border-left: 10px solid #FFFFFF00; border-right: 10px solid #FFFFFF00;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+    <h1>Menu - Readme</h1>
+    <h2>Opis działania platformy</h2>
+    <p>Wykonanie pierwszych kroków:</p>
+    <h3>1. Dodawanie danych</h3>
+    <p>Przed rozpoczęciem korzystania z menu, należy dodać swoje dane osobowe. W tym celu kliknij na zakładkę "Twoje dane" i wypełnij formularz, podając wymagane informacje, takie jak imię, nazwisko, adres, numer telefonu itp.</p>
+    <h3>2. Rejestracja pojazdu</h3>
+    <p>Po dodaniu danych osobowych, możesz przejść do rejestracji pojazdu. Wybierz zakładkę "Pojazdy" i podaj potrzebne informacje o swoim pojeździe, takie jak marka, model, rok produkcji, numer rejestracyjny itp.</p>
+    <h3>3. Tworzenie zgłoszenia serwisowego</h3>
+    <p>Po zarejestrowaniu pojazdu, będziesz mógł tworzyć zgłoszenia serwisowe. Przejdź do zakładki "Zgłoś" i kliknij na przycisk "Nowe zgłoszenie". Wypełnij formularz zgłoszenia, podając szczegóły problemu, który napotkałeś. Po zakończeniu, zgłoszenie zostanie dodane do listy zgłoszeń serwisowych.</p>
+    <h3>Przeglądanie zgłoszeń serwisowych</h3>
+    <p>W zakładce "Zgłoszenia" możesz przeglądać listę wszystkich zgłoszeń serwisowych. Znajdziesz tam informacje o zgłoszeniach, takie jak numer zgłoszenia, data utworzenia, opis problemu itp. Możesz także wyszukiwać zgłoszenia według określonych kryteriów, takich jak status zgłoszenia, data utworzenia itp.</p>
+    <h2>Uwagi</h2>
+    <p>Przed korzystaniem z menu upewnij się, że masz aktywne połączenie internetowe oraz przeglądarkę obsługującą technologię HTML5.</p>
+</div>
         </div>
     </div>
-
-    <div class="slider-controls">
-        <button class="active"></button>
-        <button></button>
-        <button></button>
     </div>
-
-    <script>
-        // Kod JavaScript do obsługi slidera
-        const slider = document.querySelector('.slider');
-        const sliderInner = document.querySelector('.slider-inner');
-        const sliderItems = document.querySelectorAll('.slider-item');
-        const sliderControls = document.querySelectorAll('.slider-controls button');
-
-        let currentIndex = 0;
-        const slideWidth = slider.clientWidth;
-
-        function goToSlide(index) {
-            sliderInner.style.transform = `translateX(-${index * slideWidth}px)`;
-
-            // Zaznacz aktywny przycisk nawigacyjny
-            sliderControls.forEach((button, i) => {
-                button.classList.toggle('active', i === index);
-            });
-        }
-
-        // Obsługa przycisków nawigacyjnych
-        sliderControls.forEach((button, i) => {
-            button.addEventListener('click', () => {
-                currentIndex = i;
-                goToSlide(currentIndex);
-            });
-        });
-
-        // Automatyczne przewijanie slidera co 3 sekundy
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % sliderItems.length;
-            goToSlide(currentIndex);
-        }, 3000);
-    </script>
 </div>
-
 
 </body>
 <script type="text/javascript" src="js/nav.js"></script>
 </html>
-<!--meni edycji rezerwacji: https://codepen.io/havardob/pen/YzwzQgm-->

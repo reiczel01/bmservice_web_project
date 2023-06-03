@@ -6,10 +6,8 @@ include_once 'php/functions.inc.php'; // Zaimportuj plik z funkcją getUserDataW
 
 // Pobierz ID użytkownika z parametrów URL
 $carId = isset($_GET['car_id']) ? $_GET['car_id'] : null;
-//var_dump($dataId);
 if ($carId) {
     $car = getCarDataById($conn, $carId);
-    //var_dump($car);
 }
 ?>
 <!doctype html>
@@ -73,6 +71,5 @@ include('nav.php');
     </table>
 
 </div>
-<!-- Reszta kodu -->
 </body>
 </html>

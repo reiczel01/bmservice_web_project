@@ -9,7 +9,7 @@ if(isset($_SESSION["userid"])) {
 
     foreach ($usersAndRoles as $user){
         echo '
-        <tr>
+        <tr class="rq">
                 <td>'. $user["id"] . '</td>
                 <td>'. $user["email"] .'</td>
                 <td>'. $user["username"] .'</td>

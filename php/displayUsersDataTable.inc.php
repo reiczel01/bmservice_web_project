@@ -9,7 +9,7 @@ if (isset($_SESSION["userid"])) {
     //var_dump($usersData);
     foreach ($usersData as $user) {
         echo '
-        <tr>
+        <tr class="rq">
             <td>' . $user["user_id"] . '</td>
             <td>' . $user["first_name"] . '</td>
             <td>' . $user["last_name"] . '</td>

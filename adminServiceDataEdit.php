@@ -1,6 +1,9 @@
 <?php
 session_start();
-
+if(!isset($_SESSION['userid'])){
+    header("Location: /index.php");
+    exit();
+}
 include_once 'php/dbHandler.inc.php'; // Zaimportuj połączenie z bazą danych
 include_once 'php/functions.inc.php'; // Zaimportuj plik z funkcją getUserDataWithRoles
 
@@ -41,7 +44,7 @@ if ($service) {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Moja pierwsza strona</title>
+    <title>Edycja zgłoszenia serwisowego</title>
     <link rel="stylesheet" href="/css/bootstrap-impostor.css">
     <style type="text/css">
         @import url("css/data-table.css");
@@ -74,7 +77,7 @@ include('nav.php');
                     </thead>
                     <tbody>
                     <tr>
-                        <td><input type="date" name="date_requested" value="<?php echo htmlspecialchars($service['request_data']['date_requested']); ?>"></td>
+                        <td><input type="date" name="date_requested" <?php if($_SESSION['role'] == 'tech') echo 'readonly';?> value="<?php echo htmlspecialchars($service['request_data']['date_requested']); ?>"></td>
                         <td><input type="date" name="date_realised" value="<?php echo htmlspecialchars($realisation_date); ?>"></td>
                         <td><input type="text" name="milage" value="<?php echo htmlspecialchars($service['request_data']['milage']); ?>"> KM</td>
                         <td>
@@ -98,7 +101,7 @@ include('nav.php');
                     </thead>
                     <tbody>
                     <tr>
-                        <td><textarea name="request_description" rows="5" cols="40"><?php echo htmlspecialchars($service['request_data']['description']); ?></textarea></td>
+                        <td><textarea  name="request_description" <?php if($_SESSION['role'] == 'tech') echo 'readonly';?> rows="5" cols="40"><?php echo htmlspecialchars($service['request_data']['description']); ?></textarea></td>
                         <td><textarea name="realisation_description" rows="5" cols="40"><?php echo htmlspecialchars($service['realisation_data']['description']); ?></textarea></td>
                         <td><button type="submit" class="btn">Zapisz</button></td>
                         <td><input type="hidden" name="request_id" style="display: none" value="<?php echo htmlspecialchars($service['request_data']['request_id']); ?>"></td>
@@ -111,6 +114,5 @@ include('nav.php');
         <?php endif; ?>
     </div>
 </div>
-<!-- Reszta kodu -->
 </body>
 </html>

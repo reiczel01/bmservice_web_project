@@ -1,11 +1,15 @@
 <?php
 session_start();
+if(!isset($_SESSION['userid'])){
+    header("Location: /index.php");
+    exit();
+}
 ?>
     <!doctype html>
     <html>
     <head>
         <meta charset="utf-8">
-        <title>Moja pierwsza strona</title>
+        <title>Panel Administracyjny</title>
         <link rel="stylesheet" href="/css/bootstrap-impostor.css">
         <style type="text/css">
             @import url("css/data-table.css");

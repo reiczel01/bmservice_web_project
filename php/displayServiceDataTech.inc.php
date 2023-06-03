@@ -1,11 +1,12 @@
 <?php
 session_start();
-if (isset($_SESSION["userid"])) {
+echo '    <link rel="stylesheet" href="/scss/btn.css">';
+if (isset($_SESSION["userid"]) && $_SESSION["role"] === "tech") {
     include_once 'dbHandler.inc.php';
     include_once 'functions.inc.php';
     $user_id = $_SESSION["userid"];
 
-    $serviceData = createTwoDimensionalArrayOfServiceRequests($conn, $user_id);
+    $serviceData = getServiceData($conn);
 
     foreach ($serviceData as $service) {
         if ($service["realisation_description"] == null) {
@@ -19,14 +20,18 @@ if (isset($_SESSION["userid"])) {
             $service["technican_last_name"] = "nie przypisano";
             $service["technican_phone"] = "nie przypisano";
         }
+        $carData = getCarDataById($conn, $service['car_id']);
+        $billingData = getFirstRecord($conn, $service['data_id']);
         echo '
 <div class="row" style="margin: 0 0; border-bottom: 1px solid #ccc;"></div>
-<div class="row rq" style="margin-top: 3em; margin-bottom: 3em;">
+<div class="row rq"  style="margin-top: 3em; margin-bottom: 3em;">
         <div class="col-4">
             <h3>Samochód:</h3>
-            <p><strong>model:</strong> '.$service["model"].'</p>
-            <p><strong>silnik:</strong> '.$service["make"].'</p>
-            <p><strong>rejestracja:</strong> '.$service["registration_nr"].'</p>
+            <p><strong>model:</strong> '.$carData["model"].'</p>
+            <p><strong>silnik:</strong> '.$carData["make"].'</p>
+            <p><strong>rejestracja:</strong> '.$carData["registration_nr"].'</p>
+            <p><strong>rok produkcji:</strong> '.$carData["production_year"].'</p>
+            <p><strong>vin:</strong> '.$carData["vin"].'</p>
             <br>
             <h3>Zgłoszenie serwisowe:</h3>
             <p><strong>data zgłoszenia:</strong> '.$service["date_requested"].'</p>
@@ -39,10 +44,16 @@ if (isset($_SESSION["userid"])) {
             <p><strong>Telefon:</strong> '.$service["technican_phone"].'</p>
         </div>
         <div class="col-8">
+            <h3>Kontakt do klienta:</h3>        
+            <p><strong>Imie:</strong> '.$billingData["first_name"].'</p>            
+            <p><strong>Nazwisko:</strong> '.$billingData["last_name"].'</p>      
+            <p><strong>Telefon:</strong> '.$billingData["phone_number"].'</p>
             <br>
-            <p><strong>opis usterki</strong><br> '.$service["request_description"].'</p>
+            <p><strong>Opis usterki:</strong><br> '.$service["request_description"].'</p>
             <br>
-            <p><strong>wykonane prace:</strong><br> '.$service["realisation_description"].'</p>
+            <p><strong>Wykonane prace:</strong><br> '.$service["realisation_description"].'</p>
+            <br>
+            <a href="../adminServiceDataEdit.php?request_id_data='.$service["request_id_data"].'&request_id_realisation='.$service["realisation_id"].'&realisation_date='.$service["date_realised"].'" class="btn"> <span class="material-symbols-outlined">edit</span></a>
         </div>
 </div>
 <div class="row" style="margin: 0 0; border-bottom: 1px solid #ccc;"></div>
@@ -52,3 +63,4 @@ if (isset($_SESSION["userid"])) {
 } else {
     exit;
 }
+

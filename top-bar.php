@@ -14,14 +14,17 @@
         //notification($_GET["error"]);
         if (strcasecmp($_SESSION["role"], "admin") === 0) {
             echo '<a href="/adminPanel.php" class="material-symbols-outlined">auto_fix</a>';
-            //TODO: add profil site with user data
-            echo '<a href="#" class="material-symbols-outlined">account_circle</a>';
+            echo '<a class="material-symbols-outlined">check_circle</a>';
         }
         else
         {
+            if(strcasecmp($_SESSION["role"], "tech") === 0)
+            {
+                echo '<a href="/techPanel.php" class="material-symbols-outlined">construction</a>';
+            }
             if(isset($_SESSION["userid"]))
             {
-                echo '<a href="#" class="material-symbols-outlined">account_circle</a>';
+                echo '<a class="material-symbols-outlined" aria-description="logedin succesful">check_circle</a>';
             }
         }
         ?>

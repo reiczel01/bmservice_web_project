@@ -24,7 +24,7 @@ if (isset($_SESSION["userid"]) && $_SESSION["role"] === "admin") {
         $billingData = getFirstRecord($conn, $service['data_id']);
         echo '
 <div class="row" style="margin: 0 0; border-bottom: 1px solid #ccc;"></div>
-<div class="row" style="margin-top: 3em; margin-bottom: 3em;">
+<div class="row rq" style="margin-top: 3em; margin-bottom: 3em;">
         <div class="col-4">
             <h3>Samochód:</h3>
             <p><strong>model:</strong> '.$carData["model"].'</p>

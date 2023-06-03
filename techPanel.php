@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!isset($_SESSION['userid'])){
+if(!isset($_SESSION['userid']) && $_SESSION['userType'] != 'tech'){
     header("Location: /index.php");
     exit();
 }
@@ -9,7 +9,7 @@ if(!isset($_SESSION['userid'])){
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Panel Administracyjny - Zgłoszenia serwisowe</title>
+    <title>Panel Mechanika</title>
     <link rel="stylesheet" href="/css/bootstrap-impostor.css">
     <style type="text/css">
         @import url("css/car.css");
@@ -46,8 +46,10 @@ include('nav.php');
                 }
             }
         </script>
+
+
         <?php
-        include('php/displayServiceData.inc.php');
+        include('php/displayServiceDataTech.inc.php');
         ?>
     </div>
 </div>

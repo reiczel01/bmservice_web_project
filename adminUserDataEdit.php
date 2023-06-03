@@ -1,6 +1,9 @@
 <?php
 session_start();
-
+if(!isset($_SESSION['userid'])){
+    header("Location: /index.php");
+    exit();
+}
 include_once 'php/dbHandler.inc.php'; // Zaimportuj połączenie z bazą danych
 include_once 'php/functions.inc.php'; // Zaimportuj plik z funkcją getUserDataWithRoles
 
@@ -16,7 +19,7 @@ if ($dataId) {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Moja pierwsza strona</title>
+    <title>Edycja danych urzytkownika</title>
     <link rel="stylesheet" href="/css/bootstrap-impostor.css">
     <style type="text/css">
         @import url("css/data-table.css");
@@ -64,6 +67,5 @@ include('nav.php');
         </table>
 
 </div>
-<!-- Reszta kodu -->
 </body>
 </html>

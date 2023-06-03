@@ -39,21 +39,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Wpisy istnieją, wykonaj zapytanie UPDATE
         $query = "UPDATE service_realisations SET technican_name = '" . $technican_data['first_name'] . "', technican_last_name = '" . $technican_data['last_name'] . "', technican_phone = '" . $technican_data['phone_number'] . "', date_realised = '" . $date_realised . "', description = '" . $realisation_description . "' WHERE request_id = " . $request_id;
         $result = mysqli_query($conn, $query);
-        if($result){
-            header("Location: /adminPanelServiceData.php?message=succes");
+        if ($result) {
+            if ($_SESSION['role'] == 'admin') {
+                header("Location: /adminPanelServiceData.php?message=succes");
+            } elseif ($_SESSION['role'] == 'tech') {
+                header("Location: /techPanel.php?message=succes");
+            } else {
+                header("Location: /index.php");
+            }
         } else {
-            header("Location: /adminPanelServiceData.php?message=error");        }
-    } else {
+            if ($_SESSION['role'] == 'admin') {
+                header("Location: /adminPanelServiceData.php?message=error");
+            } elseif ($_SESSION['role'] == 'tech') {
+                header("Location: /techPanel.php?message=error");
+            } else {
+                header("Location: /index.php");
+            }
+        }
+    }
+
+    else {
         // Wpisy nie istnieją, wykonaj zapytanie INSERT
         $query = "INSERT INTO service_realisations (technican_name, technican_last_name, technican_phone, request_id, date_realised, description) 
             VALUES ('" . $technican_data['first_name'] . "', '" . $technican_data['last_name'] . "', '" . $technican_data['phone_number'] . "', " . $request_id . ", '" . $date_realised . "', '" . $realisation_description . "')";
         $result = mysqli_query($conn, $query);
-        if($result){
-            header("Location: /adminPanelServiceData.php?message=succes");
-        } else {
-            header("Location: /adminPanelServiceData.php?message=error");
+            if($result){
+                if($_SESSION['role'] == 'admin'){
+                    header("Location: /adminPanelServiceData.php?message=succes");
+                }elseif ($_SESSION['role'] == 'tech'){
+                    header("Location: /techPanelServiceData.php?message=succes");
+                }else{
+                    header("Location: /index.php");
+                }
+            } else {
+                if($_SESSION['role'] == 'admin'){
+                    header("Location: /adminPanelServiceData.php?message=error");
+                }elseif ($_SESSION['role'] == 'tech'){
+                    header("Location: /techPanelServiceData.php?message=error");
+                }else{
+                    header("Location: /index.php");
+                }
+            }
+
         }
-    }
 
 
 
